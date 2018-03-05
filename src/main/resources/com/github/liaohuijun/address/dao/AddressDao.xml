@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper：是mybatis全局开始标签：所有的sql语句都写在Mapper标签里面 
+	namespace：命名空间，sql语句的隔离。映射文件的唯一标识，可以自定义
+	接口开发：namespace具有特殊含义，不能自己定义。namespace必须是接口的全类路径名
+	
+-->
+<mapper namespace="com.github.liaohuijun.address.dao.AddressDao">
+
+    <resultMap type="address" id="BaseResultMap">
+        <id column="id" property="id"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="level" property="level"/>
+        <result column="father" property="father"/>
+        <result column="name" property="name"/>
+        <result column="short_name" property="shortName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id,area_code,level,father,name,short_name
+    </sql>
+
+    <select id="findAllProvince" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM rm_address_cnarea WHERE level = '0'
+    </select>
+
+    <select id="findByFather" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM rm_address_cnarea WHERE father = #{fatherCode}
+    </select>
+
+    <insert id="insertAddressBatch" parameterType="java.util.List">
+        INSERT INTO gwz_address(area_code,level,father,name,short_name)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.areaCode},#{item.level},#{item.father},#{item.name},#{item.shortName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOneAddress" parameterType="address">
+        INSERT INTO gwz_address(area_code,level,father,name,short_name)
+        VALUES
+        (#{areaCode},#{level},#{father},#{name},#{shortName})
+    </insert>
+
+</mapper>

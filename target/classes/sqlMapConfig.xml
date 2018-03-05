@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!-- 配置文件必须满足顺序：
+The content of element type "configuration" must match 
+ "(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,
+ objectWrapperFactory?,plugins?,environments?,databaseIdProvider?,mappers?)".
+ -->
+
+<!-- 使用properties引入外部资源文件 : spring tools suit -->
+<properties resource="jdbc.properties"/>
+<!--typeAliases:mybatis提供的定义别名标签，可以定义多个别名  -->
+<typeAliases>
+<!-- <typeAlias type="com.github.liaohuijun.domain.User" alias="user"/> 
+	批量定义别名：package
+	使用别名名称可以是：javabean小写，也可以是首字母大写，也可以全大写。
+
+-->
+<package name="com.github.liaohuijun.address.bean"/>
+
+</typeAliases>
+
+
+<!--environments:mybatis的JDBC环境配置，可以配置多个JDBC环境  -->
+<environments default="development">
+<environment id="development">
+<!-- mybatis事务管理，mybatis的事务还是有JDBC管理 -->
+<transactionManager type="JDBC"/>
+<!-- mybatis的数据源，JDBC提供连接池管理 -->
+<dataSource type="POOLED">
+<property name="driver" value="${jdbc.driver}"/>
+<property name="url" value="${jdbc.url}"/>
+<property name="username" value="${jdbc.username}"/>
+<property name="password" value="${jdbc.password}"/>
+</dataSource>
+</environment>
+</environments>
+<!-- Mappers：引入外部映射文件 -->
+<mappers>
+<!-- 第一种方式：引入映射文件 -->
+<!--<mapper resource="sqlMap/User.xml"/>  -->
+<!-- 第二种方式：扫描单个单个接口：只针对接口开发方式 
+	<mapper class="com.github.liaohuijun.dao.UserDao"/>
+-->
+<!-- 使用package进行批量扫描接口 
+	 1.接口的类名必须和映射文件同名，且在同一个目录
+	 2.接口的方法名必须和映射文件的Statement的ID必须一致
+	 3.映射文件namespace名称必须是接口的全类路径名
+	name：接口所在包名
+-->
+<package name="com.github.liaohuijun.address.dao"/>
+</mappers>
+</configuration>
